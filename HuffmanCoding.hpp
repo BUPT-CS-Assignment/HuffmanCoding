@@ -1,8 +1,6 @@
 #ifndef _HUFFMANCODING_H
 #define _HUFFMANCODING_H
 #include "Heap.hpp"
-#include <cstdio>
-#include <cstdlib>
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -34,10 +32,9 @@ private:
     int BytecodeArray[258];
     int HuffmanTree[512][5];
     string Words[258];
-    FILE *fp;
+    const char* path;
     int top;
     Heap<Node> Nodes;
-    //
     bool Readin();
     bool HTreeInit();
     bool Select(int & node1,int & node2);
@@ -46,17 +43,8 @@ private:
 public:
     Document(const char *Address);
     //~Document();
-    int getTop();
+    bool Encode();
 
 };
-/*
-class Code{
-private:
-    int HuffmanTree[512][4];
-    FILE* fp;
-public:
-    bool coding();
 
-};
-*/
 #endif
