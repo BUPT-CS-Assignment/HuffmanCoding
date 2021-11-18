@@ -1,9 +1,7 @@
 #include"HuffmanCoding.hpp"
 #include"Heap.hpp"
 #include <stdio.h>
-
 using namespace std;
-
 
 Document::Document(const char *Address){
     fp=fopen(Address,"rb");
