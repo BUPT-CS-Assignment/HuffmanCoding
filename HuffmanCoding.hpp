@@ -1,5 +1,5 @@
-#ifndef HUFFMANCODING_H
-#define HUFFMANCODING_H
+#ifndef _HUFFMANCODING_H
+#define _HUFFMANCODING_H
 #include "Heap.hpp"
 #include <cstdio>
 #include <cstdlib>
