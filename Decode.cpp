@@ -33,7 +33,6 @@ bool Document::Decode(){
     cout<<"Finish. Check 'result.txt'."<<endl;
     fclose(reader);
     fclose(writer);
-    
     return true;
 }
 
