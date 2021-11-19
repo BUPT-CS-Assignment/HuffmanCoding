@@ -13,8 +13,8 @@ int main(){
     cout<<"Enter mode:";
     cin>>mode;
     */
-    const char* path1=filePath.c_str();
-    const char* path2=filePath.c_str();
+    const char* path1=address1.c_str();
+    const char* path2=address2.c_str();
     Document test(path1,mode0);
     Document test2(path2,mode1);
     //test.watch();

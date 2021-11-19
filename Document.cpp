@@ -1,37 +1,30 @@
-#include"HuffmanCoding.hpp"
+#include"HuffmanCoding.h"
 #include"Heap.hpp"
-#include <stdio.h>
-#include<string>
 using namespace std;
 
-Document::Document(const char *Address){
+Document::Document(const char *Address,int mode_chose){
     path=Address;
-    if(!Readin()){
-        cout<<"No such file or failed to open."<<endl;
+    mode=mode_chose;
+    if(!Readin(mode)){
+        cout<<"Oops!\nNo such file or failed to open."<<endl;
     }else{
-        HTreeInit();
-        HTreeCreate();
-        WordsCreate();
+        Sleep(500);
+        cout<<"Read-in success.\nCreating codeTree..."<<endl;
+        Sleep(500);
+        if(HTreeInit()&&HTreeCreate()&&WordsCreate()){
+            cout<<"Going to "<<(mode==0?"encoding":"decoding")<<"..."<<endl;
+            Sleep(500);
+            if(mode==0){  Encode();  }
+            else{  Decode();  }    
+        }else{
+            cout<<"Oops! Something went wrong. Try again later."<<endl;
+        }
     }
-}
-
-bool Document::Readin(){
-    FILE* reader=fopen(path,"rb");
-    if(reader==NULL)  return false;
-    char buffer[3];
-    if(!reader)  return false;
-    while(!feof(reader)){
-        int count=fread(buffer,1,1,reader);
-        if(count>0)
-            BytecodeArray[(int)*buffer]++;
-    }
-    fclose(reader);
-    return true;
 }
 
 bool Document::HTreeInit(){
-    top=0;
     HuffmanTree[0][_parent]=-1;
+    top=0;
     int flag=1;
     for(int i=0;i<=258;i++){
         if(BytecodeArray[i]!=0){
@@ -77,7 +70,7 @@ bool Document::WordsCreate(){
             int cur=i;
             int pre=HuffmanTree[cur][_parent];
             string code="";
-            while(pre!=-1){
+            while(pre!=0){
                 code = HuffmanTree[pre][_left]==cur ? ('0'+code):('1'+code);
                 cur=pre;
                 pre=HuffmanTree[pre][_parent];
@@ -85,31 +78,21 @@ bool Document::WordsCreate(){
             Words[i]=code;
         }
     }
-}
-
-bool Document::Encode(){
-    FILE *reader=fopen(path,"rb");
-    FILE *writer=fopen("out.txt","wb");
-    if(!reader||!writer){
-        printf("Failed to encode. File Error.\n");
-        return false;
-    }
-    for(int i=0;i<=256;i++){
-        if(BytecodeArray[i]>0){
-            fprintf(writer,"%d %d ",i,BytecodeArray[i]);
-        }
-    }
-    fprintf(writer,"-1\n");
-    char buffer[3];
-    while(!feof(reader)){
-        int count=fread(buffer,1,1,reader);
-        if(count>0)
-            fprintf(writer,"%s",Words[(int)*buffer].c_str());
-    }
-    fclose(reader);
-    fclose(writer);
     return true;
 }
+
+bool Document::watch(){
+    cout<<endl;
+    for(int i=0;i<512;i++){
+        cout<<i<<" "//<<(char)i<<" "
+            <<HuffmanTree[i][_weigth]<<" "
+            <<HuffmanTree[i][_left]<<" "
+            <<HuffmanTree[i][_right]<<" "
+            <<HuffmanTree[i][_parent]<<" "
+            <<(i<=256?Words[i]:" ")<<endl;
+    }
+}
+
 
 
 
