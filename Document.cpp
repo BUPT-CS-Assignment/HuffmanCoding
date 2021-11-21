@@ -10,6 +10,10 @@ Document::Document(const char *Address,int mode_chose){
     }else{
         Sleep(500);
         cout<<"Read-in success.\nCreating codeTree..."<<endl;
+        //HTreeInit();
+        //HTreeCreate();
+        //watch();
+        ///*
         Sleep(500);
         if(HTreeInit()&&HTreeCreate()&&WordsCreate()){
             cout<<"Going to "<<(mode==0?"encoding":"decoding")<<"..."<<endl;
@@ -19,16 +23,21 @@ Document::Document(const char *Address,int mode_chose){
         }else{
             cout<<"Oops! Something went wrong. Try again later."<<endl;
         }
+        //*/
     }
 }
 
 bool Document::HTreeInit(){
-    HuffmanTree[0][_parent]=-1;
-    top=0;
+    HuffmanTree[256][_parent]=-1;
+    top=256;
     int flag=1;
-    for(int i=0;i<=258;i++){
-        if(BytecodeArray[i]!=0){
-            Nodes.push(Node(i,BytecodeArray[i],0));
+    for(int i=0;i<512;i++){
+        HuffmanTree[i][_weigth]=0;
+        HuffmanTree[i][_left]=-1;
+        HuffmanTree[i][_right]=-1;
+        HuffmanTree[i][_parent]=256;
+        if(i<256&&BytecodeArray[i]!=0){
+            Nodes.push(Node(i,BytecodeArray[i],256));
             HuffmanTree[i][_weigth]=BytecodeArray[i];
         }
     }
@@ -52,32 +61,35 @@ bool Document::HTreeCreate(){
     while(!Nodes.empty()){
         int node1,node2;
         Select(node1,node2);
-        int new_weight = HuffmanTree[node1][_weigth] + HuffmanTree[node2][_weigth];
+        long long new_weight = HuffmanTree[node1][_weigth] + HuffmanTree[node2][_weigth];
         HuffmanTree[flag++][_weigth] = new_weight;
         HuffmanTree[node1][_parent] = HuffmanTree[node2][_parent] = flag-1;
         HuffmanTree[flag-1][_left] = node1;
         HuffmanTree[flag-1][_right] = node2;
         if(!Nodes.empty())
-            Nodes.push(Node(flag-1,new_weight,0));
+            Nodes.push(Node(flag-1,new_weight,256));
             top=flag-1;
     }
     return true;
 }
 
 bool Document::WordsCreate(){
-    for(int i=0;i<=256;i++){
+    for(int i=0;i<256;i++){
         if(BytecodeArray[i]>0){
             int cur=i;
             int pre=HuffmanTree[cur][_parent];
             string code="";
-            while(pre!=0){
+            while(pre!=256){
+                //cout<<pre<<endl;
                 code = HuffmanTree[pre][_left]==cur ? ('0'+code):('1'+code);
                 cur=pre;
                 pre=HuffmanTree[pre][_parent];
             }
             Words[i]=code;
+            
         }
     }
+    //cout<<"in2"<<endl;
     return true;
 }
 
