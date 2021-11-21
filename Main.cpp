@@ -5,18 +5,12 @@
 #include"Decode.cpp"
 using namespace std;
 int main(){
-    string address1="in.txt",address2="out.txt";
-    int mode0=0,mode1=1;
-    /*
+    int mode; string filePath;
     cout<<"Enter name or path of a file:";
     cin>>filePath;
-    cout<<"Enter mode:";
+    cout<<"Enter mode,0 for encode and 1 for decode:";
     cin>>mode;
-    */
-    const char* path1=address1.c_str();
-    const char* path2=address2.c_str();
-    Document test(path1,mode0);
-    Document test2(path2,mode1);
-    //test.watch();
+    const char* path=filePath.c_str();
+    Document test(path,mode);
     return 0;
 }

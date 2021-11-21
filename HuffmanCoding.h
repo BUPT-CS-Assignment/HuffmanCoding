@@ -11,13 +11,13 @@ using namespace std;
 #define _left 1
 #define _right 2
 #define _parent 3
-#define _value 4
+//#define _value 4
 
 struct Node{
     int val;
-    int weight;
+    long long weight;
     int parent;
-    Node(int val,int weight,int parent){
+    Node(int val,long long weight,int parent){
         this->val=val;
         this->weight=weight;
         this->parent=parent;
@@ -30,8 +30,8 @@ struct Node{
 
 class Document{
 private:
-    int BytecodeArray[258];
-    int HuffmanTree[512][5];
+    long long BytecodeArray[256];
+    long long HuffmanTree[512][4];
     string Words[258];
     const char* path;
     Heap<Node> Nodes;

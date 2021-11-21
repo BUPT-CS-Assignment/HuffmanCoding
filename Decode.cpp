@@ -2,7 +2,7 @@
 
 bool Document::Decode(){
     FILE* reader=fopen(path,"r");
-    FILE *writer=fopen("result.txt","wb");
+    FILE *writer=fopen("results","wb");
     if(!reader||!writer){
         cout<<"Oops! Something went wrong. Try again later."<<endl;
         return false;
@@ -25,12 +25,13 @@ bool Document::Decode(){
             cout<<"Oops!\nDecoding failed! Invalid code exists."<<endl;
             return false;
         }
-        if(HuffmanTree[flag][_left]==0 && HuffmanTree[flag][_right]==0){
-            fprintf(writer,"%c",(char)flag);
+        if(HuffmanTree[flag][_left]==-1 && HuffmanTree[flag][_right]==-1){
+            unsigned char ch=(unsigned char)flag;
+            fwrite(&ch,1,1,writer);
             flag=top;
         }
     }
-    cout<<"Finish. Check 'result.txt'."<<endl;
+    cout<<"Finish. Check 'results'."<<endl;
     fclose(reader);
     fclose(writer);
     return true;
