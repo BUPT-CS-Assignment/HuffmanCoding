@@ -7,25 +7,25 @@ bool Document::Readin(int mode){
         if(reader==NULL)  return false;
         unsigned char buffer[3];
         while(!feof(reader)){
-            //cout<<(int)*buffer<<endl;
             if(fread(buffer,1,1,reader)>0)
                 BytecodeArray[(int)*buffer]++;
+                fileSize++;
         }
         fclose(reader);
-
-
     }else if(mode==1){
         //read in cipher file while decoding.
-
         FILE* reader=fopen(path,"r");
         int num,wt;
         int flag=0;
         while(!feof(reader)){
-            int count=fscanf(reader,"%d",&num);
-            if(count<=0||num==-1)  break;
-            count=fscanf(reader,"%d",&wt);
-            if(count<=0||num==-1)  break;
-            BytecodeArray[num]=wt;
+            for(int i=0;i<256;i++){
+                if(fscanf(reader,"%d",&num)<=0){
+                    return false;
+                }
+                BytecodeArray[i]=num;
+                fileSize+=num;
+            }
+            break;
         }
         fclose(reader);
     }

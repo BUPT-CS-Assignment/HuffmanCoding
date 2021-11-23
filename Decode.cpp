@@ -1,39 +1,56 @@
 #include"HuffmanCoding.h"
 
 bool Document::Decode(){
-    FILE* reader=fopen(path,"r");
-    FILE *writer=fopen("results","wb");
+    FILE* reader=fopen(path,"rb");
+    FILE *writer=fopen(fileName,"wb");
     if(!reader||!writer){
         cout<<"Oops! Something went wrong. Try again later."<<endl;
         return false;
     }
     int num=-1;
     while(!feof(reader)){
-        if(fscanf(reader,"%d",&num)<=0||num==-1)
+        for(int i=0;i<256;i++){
+            if(fscanf(reader,"%d",&num)<=0){
+                return false;
+            } 
+        }
+        break;
+    }
+    int data=0;
+    int flag=top;
+    unsigned char buffer[3]="00";
+    while(!feof(reader)){
+        if(fread(buffer,1,1,reader)<=0)
+            return false;
+        if((int)*buffer==10)
             break;
     }
-    int flag=top;
     while(!feof(reader)){
-        char c;
-        if(fscanf(reader,"%c",&c)<=0)  break;
-        if(c=='0'){
-            flag=HuffmanTree[flag][_left];
-        }else if(c=='1'){
-            flag=HuffmanTree[flag][_right];
-        }else if(c=='\n'){
-        }else{
-            cout<<"Oops!\nDecoding failed! Invalid code exists."<<endl;
+        if(fread(buffer,1,1,reader)<=0)
             return false;
-        }
-        if(HuffmanTree[flag][_left]==-1 && HuffmanTree[flag][_right]==-1){
-            unsigned char ch=(unsigned char)flag;
-            fwrite(&ch,1,1,writer);
-            flag=top;
+        char bits[9]="00000000";
+        if(toBinary(bits,(int)*buffer)==0)
+            return false;
+        for(int i=0;i<8;i++){
+            if(data>=fileSize){
+                cout<<"Finish. Check '"<<fileName<<"'."<<endl;
+                fclose(reader);
+                fclose(writer);
+                return true;
+            }
+            if(bits[i]=='0'){
+                flag=HuffmanTree[flag][_left];
+            }else{
+                flag=HuffmanTree[flag][_right];
+            }
+            if(HuffmanTree[flag][_left]==-1 && HuffmanTree[flag][_right]==-1){
+                unsigned char ch=(unsigned char)flag;
+                fwrite(&ch,1,1,writer);
+                data++;
+                flag=top;
+            }
         }
     }
-    cout<<"Finish. Check 'results'."<<endl;
-    fclose(reader);
-    fclose(writer);
-    return true;
+    
 }
 

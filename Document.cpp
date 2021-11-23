@@ -2,24 +2,25 @@
 #include"Heap.hpp"
 using namespace std;
 
-Document::Document(const char *Address,int mode_chose){
+Document::Document(const char *Address,int mode_chose,const char * FileName){
     path=Address;
     mode=mode_chose;
+    fileName=FileName;
+    fileSize=0;
     if(!Readin(mode)){
         cout<<"Oops!\nNo such file or failed to open."<<endl;
     }else{
         Sleep(500);
         cout<<"Read-in success.\nCreating codeTree..."<<endl;
-        //HTreeInit();
-        //HTreeCreate();
-        //watch();
-        ///*
         Sleep(500);
         if(HTreeInit()&&HTreeCreate()&&WordsCreate()){
             cout<<"Going to "<<(mode==0?"encoding":"decoding")<<"..."<<endl;
             Sleep(500);
             if(mode==0){  Encode();  }
-            else{  Decode();  }    
+            else if(mode==1){  Decode();  }    
+            else{
+                cout<<"Invalid mode number! Check your input."<<endl;
+            }
         }else{
             cout<<"Oops! Something went wrong. Try again later."<<endl;
         }
@@ -80,7 +81,6 @@ bool Document::WordsCreate(){
             int pre=HuffmanTree[cur][_parent];
             string code="";
             while(pre!=256){
-                //cout<<pre<<endl;
                 code = HuffmanTree[pre][_left]==cur ? ('0'+code):('1'+code);
                 cur=pre;
                 pre=HuffmanTree[pre][_parent];
@@ -89,7 +89,6 @@ bool Document::WordsCreate(){
             
         }
     }
-    //cout<<"in2"<<endl;
     return true;
 }
 
@@ -105,6 +104,30 @@ bool Document::watch(){
     }
 }
 
+int Document::toInt(char bit[]){
+    int out=0;
+    for(int i=0;i<8;i++){
+        out+=(bit[i]-0x30)*pow(2,7-i);
+    }
+    return out;
+}
+
+bool Document::toBinary(char* binary,int num){
+    int dir=0;
+    while(num!=0){
+        if(num%2==1)
+            binary[dir++]='1';
+        else
+            binary[dir++]='0';
+        num=num/2;
+    }
+    for(int i=0;i<4;i++){
+        char temp=binary[i];
+        binary[i]=binary[7-i];
+        binary[7-i]=temp;
+    }
+    return true;
+}
 
 
 
