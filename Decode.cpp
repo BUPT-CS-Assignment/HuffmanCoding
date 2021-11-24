@@ -1,8 +1,8 @@
 #include"HuffmanCoding.h"
 
 bool Document::Decode(){
-    FILE* reader=fopen(path,"rb");
-    FILE *writer=fopen(fileName,"wb");
+    FILE* reader=fopen(FILEpath,"rb");
+    FILE *writer=fopen(FILEname,"wb");
     if(!reader||!writer){
         cout<<"Oops! Something went wrong. Try again later."<<endl;
         return false;
@@ -25,6 +25,8 @@ bool Document::Decode(){
         if((int)*buffer==10)
             break;
     }
+    //////
+    //Decode process.
     while(!feof(reader)){
         if(fread(buffer,1,1,reader)<=0)
             return false;
@@ -33,7 +35,7 @@ bool Document::Decode(){
             return false;
         for(int i=0;i<8;i++){
             if(data>=fileSize){
-                cout<<"Finish. Check '"<<fileName<<"'."<<endl;
+                cout<<"Finish. Check '"<<FILEname<<"'."<<endl;
                 fclose(reader);
                 fclose(writer);
                 return true;

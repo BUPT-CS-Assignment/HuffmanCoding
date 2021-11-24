@@ -2,29 +2,23 @@
 #include"Heap.hpp"
 using namespace std;
 
-Document::Document(const char *Address,int mode_chose,const char * FileName){
-    path=Address;
-    mode=mode_chose;
-    fileName=FileName;
+Document::Document(string filePath,string fileName){
+    FILEpath=filePath.c_str();
+    FILEname=fileName.c_str();
     fileSize=0;
+}
+
+bool Document::Init(int mode){
     if(!Readin(mode)){
-        cout<<"Oops!\nNo such file or failed to open."<<endl;
+        cout<<"Oops! Read-in failed.\nNo such file or failed to open."<<endl;
     }else{
         Sleep(500);
-        cout<<"Read-in success.\nCreating codeTree..."<<endl;
+        cout<<"Read-in success.\nCreating CodeTree..."<<endl;
         Sleep(500);
-        if(HTreeInit()&&HTreeCreate()&&WordsCreate()){
-            cout<<"Going to "<<(mode==0?"encoding":"decoding")<<"..."<<endl;
-            Sleep(500);
-            if(mode==0){  Encode();  }
-            else if(mode==1){  Decode();  }    
-            else{
-                cout<<"Invalid mode number! Check your input."<<endl;
-            }
-        }else{
-            cout<<"Oops! Something went wrong. Try again later."<<endl;
-        }
-        //*/
+        if(HTreeInit()&&HTreeCreate()&&WordsCreate())
+            return true;
+        cout<<"Oops! Something went wrong. Try again later."<<endl;
+        return false;
     }
 }
 
@@ -92,7 +86,7 @@ bool Document::WordsCreate(){
     return true;
 }
 
-bool Document::watch(){
+bool Document::checkTree(){
     cout<<endl;
     for(int i=0;i<512;i++){
         cout<<i<<" "//<<(char)i<<" "

@@ -3,7 +3,7 @@
 bool Document::Readin(int mode){
     if(mode==0){
         //read in source file while encoding.
-        FILE* reader=fopen(path,"rb");
+        FILE* reader=fopen(FILEpath,"rb");
         if(reader==NULL)  return false;
         unsigned char buffer[3];
         while(!feof(reader)){
@@ -14,7 +14,7 @@ bool Document::Readin(int mode){
         fclose(reader);
     }else if(mode==1){
         //read in cipher file while decoding.
-        FILE* reader=fopen(path,"r");
+        FILE* reader=fopen(FILEpath,"r");
         int num,wt;
         int flag=0;
         while(!feof(reader)){
@@ -28,6 +28,8 @@ bool Document::Readin(int mode){
             break;
         }
         fclose(reader);
+    }else{
+        return false;
     }
     return true;
 }

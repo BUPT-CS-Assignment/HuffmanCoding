@@ -2,8 +2,8 @@
 
 int toBinary(char bit[]);
 bool Document::Encode(){
-    FILE *reader=fopen(path,"rb");
-    FILE *writer=fopen(fileName,"wb");
+    FILE *reader=fopen(FILEpath,"rb");
+    FILE *writer=fopen(FILEname,"wb");
     if(!reader||!writer){
         cout<<"Oops! Something went wrong. Try again later."<<endl;
         return false;
@@ -34,7 +34,7 @@ bool Document::Encode(){
         int byte=toInt(bitStr);
         fwrite(&byte,1,1,writer);
     }
-    cout<<"Finish. Check '"<<fileName<<"'."<<endl;
+    cout<<"Finish. Check '"<<FILEname<<"'."<<endl;
     fclose(reader);
     fclose(writer);
     return true;

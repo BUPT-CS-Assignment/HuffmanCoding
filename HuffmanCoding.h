@@ -33,11 +33,10 @@ private:
     long long BytecodeArray[256];
     long long HuffmanTree[512][4];
     string Words[258];
-    const char* path;
-    const char* fileName;
+    const char* FILEpath;
+    const char* FILEname;
     Heap<Node> Nodes;
     long long fileSize;
-    int mode;
     int top;
     ///
     bool Readin(int mode);
@@ -46,11 +45,12 @@ private:
     bool HTreeCreate();
     bool WordsCreate();
 public:
-    Document(const char *Address,int mode_chose,const char * fileName);
+    Document(string filePath,string fileName);
     //~Document();
+    bool Init(int mode);
     bool Encode();
     bool Decode();
-    bool watch();
+    bool checkTree();
     int toInt(char bit[]);
     bool toBinary(char* binary,int num);
 
