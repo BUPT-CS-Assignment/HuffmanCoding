@@ -31,7 +31,8 @@ int main(){
             case 1:
                 if(File.Init(1)){
                     cout<<"Initial success. Going to decode."<<endl;
-                    File.Decode();
+                    if(!File.Decode())
+                        cout<<"Invalid CodeTree! Check your file."<<endl;
                 }else{
                     cout<<"Initial failed. Try again later."<<endl;
                 }
@@ -43,7 +44,7 @@ int main(){
                     cout<<"HuffmanTree check for mode:"<<mode_2<<endl;
                     if(!File.checkTree())
                          cout<<"Error. Try again later."<<endl;
-                         break;
+                    break;
                 }
             default:
                 cout<<"Invalid mode number! Check your input."<<endl;

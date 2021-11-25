@@ -3,20 +3,18 @@
 bool Document::Readin(int mode){
     if(mode==0){
         //read in source file while encoding.
-        FILE* reader=fopen(FILEpath,"rb");
+        fseek(reader,0,0);
         if(reader==NULL)  return false;
         int buffer=0;
         while(!feof(reader)){
-            if(fread(&buffer,1,1,reader)>0){
-                BytecodeArray[buffer]++;
-                fileSize++;           
-            }
+            if(fread(&buffer,1,1,reader)>0)
+                BytecodeArray[buffer]++;      
+            
         }
-        fclose(reader);
         return true;
     }else if(mode==1){
         //read in cipher file while decoding.
-        FILE* reader=fopen(FILEpath,"rb");
+        fseek(reader,0,0);
         int num,wt;
         int flag=0;
         int number;
@@ -25,11 +23,9 @@ bool Document::Readin(int mode){
                 if(fread(&number,4,1,reader)<=0) 
                     return false;
                 BytecodeArray[i]=number;
-                fileSize+=number;
             }
             break;
         }
-        fclose(reader);
         return true;
     }
     return false;
