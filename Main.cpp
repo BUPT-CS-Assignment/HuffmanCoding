@@ -6,18 +6,17 @@
 using namespace std;
 int main(){
     int mode=0; int mode_2=0; 
-    string filePath,fileName;
+    string filePath,fileName="out";
     cout<<"Enter 0 to encode,1 to decode and -1 to exit.\nMode:";
     cin>>mode;
     while(mode!=-1){
         // Readin process.
-        cout<<"Enter name or path of a file:";
+        cout<<"Enter name or path of a file: ";
         cin>>filePath;    
         if(mode!=2){
-            cout<<"Enter export file name:";
+            cout<<"Enter export file name: ";
             cin>>fileName;
-        }else
-            fileName="out";
+        }
         /////////////////////////////////////////////////////////////////  
         Document File(filePath,fileName);      //Construct FILE.
         switch(mode){

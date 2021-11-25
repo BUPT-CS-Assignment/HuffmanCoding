@@ -97,6 +97,7 @@ bool Document::checkTree(){
             <<HuffmanTree[i][_parent]<<" "
             <<(i<=256?Words[i]:" ")<<endl;
     }
+    cout<<"File Size: "<<fileSize<<endl;
     cout<<"Done."<<endl;
     return true;
 }
