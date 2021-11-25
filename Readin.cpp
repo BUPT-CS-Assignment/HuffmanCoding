@@ -5,31 +5,32 @@ bool Document::Readin(int mode){
         //read in source file while encoding.
         FILE* reader=fopen(FILEpath,"rb");
         if(reader==NULL)  return false;
-        unsigned char buffer[3];
+        int buffer=0;
         while(!feof(reader)){
-            if(fread(buffer,1,1,reader)>0)
-                BytecodeArray[(int)*buffer]++;
-                fileSize++;
+            if(fread(&buffer,1,1,reader)>0){
+                BytecodeArray[buffer]++;
+                fileSize++;           
+            }
         }
         fclose(reader);
+        return true;
     }else if(mode==1){
         //read in cipher file while decoding.
-        FILE* reader=fopen(FILEpath,"r");
+        FILE* reader=fopen(FILEpath,"rb");
         int num,wt;
         int flag=0;
+        int number;
         while(!feof(reader)){
             for(int i=0;i<256;i++){
-                if(fscanf(reader,"%d",&num)<=0){
+                if(fread(&number,4,1,reader)<=0) 
                     return false;
-                }
-                BytecodeArray[i]=num;
-                fileSize+=num;
+                BytecodeArray[i]=number;
+                fileSize+=number;
             }
             break;
         }
         fclose(reader);
-    }else{
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }

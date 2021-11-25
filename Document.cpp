@@ -9,6 +9,7 @@ Document::Document(string filePath,string fileName){
 }
 
 bool Document::Init(int mode){
+    if(!(mode==0||mode==1))  return false;
     if(!Readin(mode)){
         cout<<"Oops! Read-in failed.\nNo such file or failed to open."<<endl;
     }else{
@@ -18,8 +19,8 @@ bool Document::Init(int mode){
         if(HTreeInit()&&HTreeCreate()&&WordsCreate())
             return true;
         cout<<"Oops! Something went wrong. Try again later."<<endl;
-        return false;
     }
+    return false;
 }
 
 bool Document::HTreeInit(){
@@ -89,25 +90,29 @@ bool Document::WordsCreate(){
 bool Document::checkTree(){
     cout<<endl;
     for(int i=0;i<512;i++){
-        cout<<i<<" "//<<(char)i<<" "
+        cout<<i<<" "
             <<HuffmanTree[i][_weigth]<<" "
             <<HuffmanTree[i][_left]<<" "
             <<HuffmanTree[i][_right]<<" "
             <<HuffmanTree[i][_parent]<<" "
             <<(i<=256?Words[i]:" ")<<endl;
     }
+    cout<<"Done."<<endl;
+    return true;
 }
 
-int Document::toInt(char bit[]){
+int Document::toInt(char* bit){
     int out=0;
-    for(int i=0;i<8;i++){
-        out+=(bit[i]-0x30)*pow(2,7-i);
+    int len=strlen(bit);
+    for(int i=0;i<len;i++){
+        out+=(bit[i]-0x30)*pow(2,len-1-i);
     }
     return out;
 }
 
 bool Document::toBinary(char* binary,int num){
     int dir=0;
+    int len=strlen(binary);
     while(num!=0){
         if(num%2==1)
             binary[dir++]='1';
@@ -115,13 +120,14 @@ bool Document::toBinary(char* binary,int num){
             binary[dir++]='0';
         num=num/2;
     }
-    for(int i=0;i<4;i++){
+    for(int i=0;i<len/2;i++){
         char temp=binary[i];
-        binary[i]=binary[7-i];
-        binary[7-i]=temp;
+        binary[i]=binary[len-1-i];
+        binary[len-1-i]=temp;
     }
     return true;
 }
+
 
 
 

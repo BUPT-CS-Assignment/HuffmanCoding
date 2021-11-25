@@ -30,13 +30,13 @@ struct Node{
 
 class Document{
 private:
-    long long BytecodeArray[256];
-    long long HuffmanTree[512][4];
+    int BytecodeArray[256];
+    int HuffmanTree[512][4];
     string Words[258];
     const char* FILEpath;
     const char* FILEname;
     Heap<Node> Nodes;
-    long long fileSize;
+    unsigned long long fileSize;
     int top;
     ///
     bool Readin(int mode);
@@ -51,7 +51,7 @@ public:
     bool Encode();
     bool Decode();
     bool checkTree();
-    int toInt(char bit[]);
+    int toInt(char* bit);
     bool toBinary(char* binary,int num);
 
 };

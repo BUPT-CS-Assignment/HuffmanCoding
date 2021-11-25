@@ -7,32 +7,22 @@ bool Document::Decode(){
         cout<<"Oops! Something went wrong. Try again later."<<endl;
         return false;
     }
-    int num=-1;
+    int buffers=0;
     while(!feof(reader)){
         for(int i=0;i<256;i++){
-            if(fscanf(reader,"%d",&num)<=0){
-                return false;
-            } 
+            if(fread(&buffers,4,1,reader)<=0) return false;
         }
         break;
     }
-    int data=0;
+    unsigned long long data=0;
     int flag=top;
-    unsigned char buffer[3]="00";
-    while(!feof(reader)){
-        if(fread(buffer,1,1,reader)<=0)
-            return false;
-        if((int)*buffer==10)
-            break;
-    }
-    //////
+    int buffer=0;
     //Decode process.
     while(!feof(reader)){
-        if(fread(buffer,1,1,reader)<=0)
+        if(fread(&buffer,1,1,reader)<=0)
             return false;
         char bits[9]="00000000";
-        if(toBinary(bits,(int)*buffer)==0)
-            return false;
+        if(toBinary(bits,buffer)==0)  return false;
         for(int i=0;i<8;i++){
             if(data>=fileSize){
                 cout<<"Finish. Check '"<<FILEname<<"'."<<endl;
@@ -46,8 +36,8 @@ bool Document::Decode(){
                 flag=HuffmanTree[flag][_right];
             }
             if(HuffmanTree[flag][_left]==-1 && HuffmanTree[flag][_right]==-1){
-                unsigned char ch=(unsigned char)flag;
-                fwrite(&ch,1,1,writer);
+                //unsigned char ch=(unsigned char)flag;
+                if(fwrite(&flag,1,1,writer)<=0)  return false;
                 data++;
                 flag=top;
             }
