@@ -31,14 +31,14 @@ struct Node{
 class Document{
 private:
     int BytecodeArray[256];
-    int HuffmanTree[512][4];
+    long long HuffmanTree[512][4];
     string Words[258];
     const char* FILEpath;
     const char* FILEname;
+    FILE* reader;
+    FILE* writer;
     Heap<Node> Nodes;
-    unsigned long long fileSize;
     int top;
-    ///
     bool Readin(int mode);
     bool HTreeInit();
     bool Select(int & node1,int & node2);
@@ -46,7 +46,7 @@ private:
     bool WordsCreate();
 public:
     Document(string filePath,string fileName);
-    //~Document();
+    ~Document();
     bool Init(int mode);
     bool Encode();
     bool Decode();

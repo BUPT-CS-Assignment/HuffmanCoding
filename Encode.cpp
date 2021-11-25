@@ -1,8 +1,8 @@
 #include"HuffmanCoding.h"
 
 bool Document::Encode(){
-    FILE *reader=fopen(FILEpath,"rb");
-    FILE *writer=fopen(FILEname,"wb");
+    fseek(reader,0,0);
+    fseek(writer,0,0);
     if(!reader||!writer){
         cout<<"Oops! Something went wrong. Try again later."<<endl;
         return false;
@@ -34,8 +34,6 @@ bool Document::Encode(){
         if(fwrite(&byte,1,1,writer)<=0) return false;
     }
     cout<<"Finish. Check '"<<FILEname<<"'."<<endl;
-    fclose(reader);
-    fclose(writer);
     return true;
 }
 

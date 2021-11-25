@@ -1,8 +1,8 @@
 #include"HuffmanCoding.h"
 
 bool Document::Decode(){
-    FILE* reader=fopen(FILEpath,"rb");
-    FILE *writer=fopen(FILEname,"wb");
+    fseek(reader,0,0);
+    fseek(writer,0,0);
     if(!reader||!writer){
         cout<<"Oops! Something went wrong. Try again later."<<endl;
         return false;
@@ -22,12 +22,13 @@ bool Document::Decode(){
         if(fread(&buffer,1,1,reader)<=0)
             return false;
         char bits[9]="00000000";
-        if(toBinary(bits,buffer)==0)  return false;
+        if(toBinary(bits,buffer)==0)
+            return false;
         for(int i=0;i<8;i++){
-            if(data>=fileSize){
+            if(flag==-1||flag==256)
+                return false;
+            if(data>=HuffmanTree[top][_weigth]){
                 cout<<"Finish. Check '"<<FILEname<<"'."<<endl;
-                fclose(reader);
-                fclose(writer);
                 return true;
             }
             if(bits[i]=='0'){
@@ -37,12 +38,14 @@ bool Document::Decode(){
             }
             if(HuffmanTree[flag][_left]==-1 && HuffmanTree[flag][_right]==-1){
                 //unsigned char ch=(unsigned char)flag;
-                if(fwrite(&flag,1,1,writer)<=0)  return false;
+                if(fwrite(&flag,1,1,writer)<=0)
+                    return false;
                 data++;
                 flag=top;
             }
         }
     }
+    return false;
     
 }
 

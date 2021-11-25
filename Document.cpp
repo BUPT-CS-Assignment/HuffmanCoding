@@ -5,7 +5,26 @@ using namespace std;
 Document::Document(string filePath,string fileName){
     FILEpath=filePath.c_str();
     FILEname=fileName.c_str();
-    fileSize=0;
+    reader=writer=NULL;
+    //
+    reader=fopen(FILEpath,"rb");
+    writer=fopen(FILEname,"wb");
+    for(int i=0;i<512;i++){
+        HuffmanTree[i][_weigth]=0;
+        HuffmanTree[i][_left] = HuffmanTree[i][_right] = -1;
+        HuffmanTree[i][_parent]=256;
+        if(i<256)
+            BytecodeArray[i]=0;
+    }
+}
+
+Document::~Document(){
+    if(reader!=NULL){
+        fclose(reader);
+    }
+    if(writer!=NULL){
+        fclose(writer);
+    }
 }
 
 bool Document::Init(int mode){
@@ -27,12 +46,8 @@ bool Document::HTreeInit(){
     HuffmanTree[256][_parent]=-1;
     top=256;
     int flag=1;
-    for(int i=0;i<512;i++){
-        HuffmanTree[i][_weigth]=0;
-        HuffmanTree[i][_left]=-1;
-        HuffmanTree[i][_right]=-1;
-        HuffmanTree[i][_parent]=256;
-        if(i<256&&BytecodeArray[i]!=0){
+    for(int i=0;i<256;i++){
+        if(BytecodeArray[i]!=0){
             Nodes.push(Node(i,BytecodeArray[i],256));
             HuffmanTree[i][_weigth]=BytecodeArray[i];
         }
@@ -97,7 +112,7 @@ bool Document::checkTree(){
             <<HuffmanTree[i][_parent]<<" "
             <<(i<=256?Words[i]:" ")<<endl;
     }
-    cout<<"File Size: "<<fileSize<<endl;
+    cout<<"File Size: "<<HuffmanTree[top][_weigth]<<endl;
     cout<<"Done."<<endl;
     return true;
 }
