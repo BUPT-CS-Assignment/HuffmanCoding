@@ -12,12 +12,11 @@ using namespace std;
 #define _left 1
 #define _right 2
 #define _parent 3
-
+#define TOP_NUM 256
 
 struct Node{
-    int val;
+    int val ,parent;
     long long weight;
-    int parent;
     Node(int val,long long weight,int parent){
         this->val=val;
         this->weight=weight;
@@ -31,7 +30,6 @@ struct Node{
 class reCodingMethod {
     unsigned char buff[64] , buff_p , buff_t;
     unsigned char bitSeq[256] , bitSeq_p;
-
 public:
     void searchTree(long long HuffmanTree[][4] , int now);
     bool enCodingTree(FILE **fp_h , long long HuffmanTree[][4] , const int top );

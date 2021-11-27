@@ -1,8 +1,7 @@
-#include"HuffmanCoding.h"
+#include "HuffmanCoding.h"
 
-using namespace std;
-int main(){
-    int mode=0; int mode_2=0; 
+int main(int argc , char *argv[]){
+    int mode = 0 ,  mode_2 = 0; 
     string filePath,fileName="out";
     cout<<"Enter 0 to encode,1 to decode and -1 to exit.\nMode:";
     cin>>mode;

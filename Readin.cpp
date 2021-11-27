@@ -14,7 +14,7 @@ bool Document::Readin(int mode){
         return true;
     }else if(mode==1){
         //read in cipher file while decoding.
-         fseek(reader,0,0);
+        // fseek(reader,0,0);
         // int num,wt;
         // int flag=0;
         // int number;

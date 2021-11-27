@@ -4,7 +4,7 @@ project(HuffmanCoding VERSION 1.1.0)
 #include(CTest)
 #enable_testing()
 
-add_executable(HuffmanCoding Main.cpp Document.cpp Readin.cpp Encode.cpp Decode.cpp reCodingMethod.cpp)
+add_executable(HuffmanCoding main.cpp Document.cpp Readin.cpp Encode.cpp Decode.cpp reCodingMethod.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
