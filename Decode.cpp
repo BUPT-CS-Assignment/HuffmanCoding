@@ -8,7 +8,7 @@ bool Document::Decode(){
         return false;
     }
     top = reCodingMethod::deCodingTree(&reader , HuffmanTree);
-   for(int i = 256 ; i < 512 ; i++) {
+    for(int i = 256 ; i < 512 ; i++) {
         printf("%d -- %d -- %d\n" ,i , HuffmanTree[i][_left] ,HuffmanTree[i][_right] );
     }
     // int buffers=0;
@@ -18,7 +18,6 @@ bool Document::Decode(){
     //     }
     //     break;
     // }
-    putchar('t');
     unsigned long long data=0;
     int flag=top;
     int buffer=0;

@@ -1,5 +1,4 @@
 #include"HuffmanCoding.h"
-#include"Heap.hpp"
 using namespace std;
 
 Document::Document(string filePath,string fileName){
