@@ -26,8 +26,11 @@ struct Node
     // }
 };
 
-
-int main() {
+int main(int argc, char* argv[]) {
+    for(int i = 0 ; i < argc ; i++) {
+        puts(argv[i]);
+    }
+    
     //声明一个小根堆
     Heap<Node> h;
 
