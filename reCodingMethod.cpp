@@ -23,8 +23,14 @@ void reCodingMethod::searchTree(long long HuffmanTree[][4] , int now) {
 
 //对哈夫曼树进行编码
 bool reCodingMethod::enCodingTree(FILE **fp_h , long long HuffmanTree[][4] , const int top ) {
+    memset(buff , 0  , sizeof(buff));
+    memset(bitSeq , 0  , sizeof(bitSeq));
+    buff_t = 0 , bitSeq_p = 0;
     FILE *fp = *fp_h;
     searchTree(HuffmanTree , top);
+
+    while(!buff[buff_t--]);
+
     fwrite(&(++buff_t) , 1 , 1 ,fp); //写入首字节:树结构数组的大小
     fwrite(buff , buff_t , 1 ,fp);    //写入buff数组:存储树结构的
     fwrite(bitSeq , bitSeq_p , 1 ,fp);//写入bitseq数组:按照DFS序,依次存储权值从大到小的字节叶子
@@ -56,10 +62,11 @@ bool reCodingMethod::buildTree(FILE **fp ,long long HuffmanTree[][4] , int &now)
 //从文件中读入头部分,进行解码并建树.返回树根的编号(默认为256)
 int reCodingMethod::deCodingTree(FILE **fp_h , long long HuffmanTree[][4] ) {
     FILE *fp = *fp_h;
+    memset(buff , 0 , sizeof(buff));
     unsigned char head_t = 0;
     fread(&head_t, 1 , 1 ,fp); //读入首字节:树结构数组的大小
     fread(buff, 1 , head_t , fp); //读入树结构数组.此后fp位于首个字节叶子
-
+    
     int top = TOP_NUM;  buff_p = 0;
     buildTree(&fp , HuffmanTree , top);
 
