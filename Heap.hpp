@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
-//å°æ ¹å †å®ç°
+//Ğ¡¸ù¶ÑÊµÏÖ
 template <class T>
 class Heap {
 private:
@@ -18,15 +18,15 @@ public:
     ~Heap() {
         free(heapNode);
     }
-    //è¾“å‡ºå †å†…å®¹
+    //Êä³ö¶ÑÄÚÈİ
     void print() ;
-    //åˆ¤æ–­å †æ˜¯å¦ä¸ºç©º
+    //ÅĞ¶Ï¶ÑÊÇ·ñÎª¿Õ
     bool empty();
-    //è¾“å‡ºå †é¡¶çš„å…ƒç´ 
+    //Êä³ö¶Ñ¶¥µÄÔªËØ
     T top() ;
-    //æŠŠä¸€ä¸ªèŠ‚ç‚¹æ”¾å…¥å †ä¸­
+    //°ÑÒ»¸ö½Úµã·ÅÈë¶ÑÖĞ
     void push(T node);
-    //åˆ é™¤å †é¡¶å…ƒç´ 
+    //É¾³ı¶Ñ¶¥ÔªËØ
     void pop() ;
 };
 
@@ -71,8 +71,8 @@ template<class T>
 void Heap<T>::pop() {
     std::swap(heapNode[--lastPos] , heapNode[1]);
     for(int nowPos = 1 ; nowPos <<= 1 ; ) {
-        if( heapNode[nowPos+1] < heapNode[nowPos] && nowPos+1 < lastPos)  nowPos++;
-        if( heapNode[nowPos] < heapNode[nowPos >> 1] && nowPos < lastPos) 
+        if( nowPos+1 < lastPos && heapNode[nowPos+1] < heapNode[nowPos] )  nowPos++;
+        if( nowPos < lastPos && heapNode[nowPos] < heapNode[nowPos >> 1]) 
             std::swap(heapNode[nowPos >> 1] , heapNode[nowPos]);
         else break;
     }

@@ -1,51 +1,35 @@
 #include"HuffmanCoding.h"
 
-bool Document::Decode(){
-    fseek(reader,0,0);
-    fseek(writer,0,0);
-    if(!reader||!writer){
-        cout<<"Oops! Something went wrong. Try again later."<<endl;
-        return false;
-    }
-    int buffers=0;
-    while(!feof(reader)){
-        for(int i=0;i<256;i++){
-            if(fread(&buffers,4,1,reader)<=0) return false;
+//解码过程
+bool Document::Decode() {
+    long long data = 0;
+    int flag = TOP_NUM;
+    int buffer = 0;
+    while (!feof(reader)) {
+        if (fread( & buffer, 1, 1, reader) <= 0 && !feof(reader)) //如果读取失败，则返回错误
+            return false;
+        if(feof(reader)){
+            cout << "Finish. Check '" << FILEname << "'." << endl;
+            return true;
         }
-        break;
-    }
-    unsigned long long data=0;
-    int flag=top;
-    int buffer=0;
-    //Decode process.
-    while(!feof(reader)){
-        if(fread(&buffer,1,1,reader)<=0)
-            return false;
-        char bits[9]="00000000";
-        if(toBinary(bits,buffer)==0)
-            return false;
-        for(int i=0;i<8;i++){
-            if(flag==-1||flag==256)
-                return false;
-            if(data>=HuffmanTree[top][_weigth]){
-                cout<<"Finish. Check '"<<FILEname<<"'."<<endl;
-                return true;
-            }
-            if(bits[i]=='0'){
-                flag=HuffmanTree[flag][_left];
-            }else{
-                flag=HuffmanTree[flag][_right];
-            }
-            if(HuffmanTree[flag][_left]==-1 && HuffmanTree[flag][_right]==-1){
-                //unsigned char ch=(unsigned char)flag;
-                if(fwrite(&flag,1,1,writer)<=0)
+        char bits[9] = "00000000";
+        toBinary(bits, buffer);
+        ///8bit合并输出
+        for (int i = 0; i < 8; i++) {
+            flag = HuffmanTree[flag][bits[i] == '0' ? _left : _right]; //按bit读取到0，向左子树找；否则向右子树找
+            if (HuffmanTree[flag][_left] == -1 && HuffmanTree[flag][_right] == -1) {   //判断是否是叶子节点，若是则写入叶子节点编号
+                if (fwrite( & flag, 1, 1, writer) <= 0)
                     return false;
-                data++;
-                flag=top;
+                data++;     //字节计数器+1
+                flag = top;   //更新flag
+            }
+            if (data >= FILEsize) {   //判断是否到达文件尾
+                cout << "Finish. Check '" << FILEname << "'." << endl;
+                return true;
             }
         }
     }
     return false;
-    
 }
+
 
