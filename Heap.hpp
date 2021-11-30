@@ -71,8 +71,8 @@ template<class T>
 void Heap<T>::pop() {
     std::swap(heapNode[--lastPos] , heapNode[1]);
     for(int nowPos = 1 ; nowPos <<= 1 ; ) {
-        if( heapNode[nowPos+1] < heapNode[nowPos] && nowPos+1 < lastPos)  nowPos++;
-        if( heapNode[nowPos] < heapNode[nowPos >> 1] && nowPos < lastPos) 
+        if( nowPos+1 < lastPos && heapNode[nowPos+1] < heapNode[nowPos] )  nowPos++;
+        if( nowPos < lastPos && heapNode[nowPos] < heapNode[nowPos >> 1]) 
             std::swap(heapNode[nowPos >> 1] , heapNode[nowPos]);
         else break;
     }
