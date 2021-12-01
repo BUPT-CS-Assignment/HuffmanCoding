@@ -20,7 +20,6 @@ bool Document::ReadinCode() {
     int _top = TOP_NUM;
     memset(buff, 0, sizeof(buff));
     char reading[9]="00000000";
-    char in;
     for(int i=0;i<4;i++){
         if(fread(&reading,8,1,reader) <= 0) return false;
         FILEsize=FILEsize*pow(2,8)+toInt(reading);
