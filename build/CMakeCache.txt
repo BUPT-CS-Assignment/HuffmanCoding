@@ -24,7 +24,7 @@ CMAKE_ADDR2LINE:FILEPATH=D:/TDM-GCC-64/bin/addr2line.exe
 CMAKE_AR:FILEPATH=D:/TDM-GCC-64/bin/ar.exe
 
 //No help, variable specified on the command line.
-CMAKE_BUILD_TYPE:STRING=Debug
+CMAKE_BUILD_TYPE:STRING=Release
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON

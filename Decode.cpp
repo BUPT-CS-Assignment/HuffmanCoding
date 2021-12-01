@@ -1,29 +1,28 @@
 #include"HuffmanCoding.h"
 
-//½âÂë¹ı³Ì
+//è§£ç è¿‡ç¨‹
 bool Document::Decode() {
     long long data = 0;
     int flag = TOP_NUM;
-    int buffer = 0;
+    unsigned char buffer[9]="00000000";
     while (!feof(reader)) {
-        if (fread( & buffer, 1, 1, reader) <= 0 && !feof(reader)) //Èç¹û¶ÁÈ¡Ê§°Ü£¬Ôò·µ»Ø´íÎó
+        if (fread( & buffer, 8, 1, reader) <= 0 && !feof(reader)) //å¦‚æœè¯»å–å¤±è´¥ï¼Œåˆ™è¿”å›é”™è¯¯
             return false;
         if(feof(reader)){
             cout << "Finish. Check '" << FILEname << "'." << endl;
             return true;
         }
-        char bits[9] = "00000000";
-        toBinary(bits, buffer);
-        ///8bitºÏ²¢Êä³ö
+        fseek(reader,1,SEEK_CUR);
+        ///8bitåˆå¹¶è¾“å‡º
         for (int i = 0; i < 8; i++) {
-            flag = HuffmanTree[flag][bits[i] == '0' ? _left : _right]; //°´bit¶ÁÈ¡µ½0£¬Ïò×ó×ÓÊ÷ÕÒ£»·ñÔòÏòÓÒ×ÓÊ÷ÕÒ
-            if (HuffmanTree[flag][_left] == -1 && HuffmanTree[flag][_right] == -1) {   //ÅĞ¶ÏÊÇ·ñÊÇÒ¶×Ó½Úµã£¬ÈôÊÇÔòĞ´ÈëÒ¶×Ó½Úµã±àºÅ
+            flag = HuffmanTree[flag][buffer[i] == '0' ? _left : _right]; //æŒ‰bitè¯»å–åˆ°0ï¼Œå‘å·¦å­æ ‘æ‰¾ï¼›å¦åˆ™å‘å³å­æ ‘æ‰¾
+            if (HuffmanTree[flag][_left] == -1 && HuffmanTree[flag][_right] == -1) {   //åˆ¤æ–­æ˜¯å¦æ˜¯å¶å­èŠ‚ç‚¹ï¼Œè‹¥æ˜¯åˆ™å†™å…¥å¶å­èŠ‚ç‚¹ç¼–å·
                 if (fwrite( & flag, 1, 1, writer) <= 0)
                     return false;
-                data++;     //×Ö½Ú¼ÆÊıÆ÷+1
-                flag = top;   //¸üĞÂflag
+                data++;     //å­—èŠ‚è®¡æ•°å™¨+1
+                flag = top;   //æ›´æ–°flag
             }
-            if (data >= FILEsize) {   //ÅĞ¶ÏÊÇ·ñµ½´ïÎÄ¼şÎ²
+            if (data >= FILEsize) {   //åˆ¤æ–­æ˜¯å¦åˆ°è¾¾æ–‡ä»¶å°¾
                 cout << "Finish. Check '" << FILEname << "'." << endl;
                 return true;
             }

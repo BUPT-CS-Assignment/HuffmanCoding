@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
-//Ğ¡¸ù¶ÑÊµÏÖ
+//å°æ ¹å †å®ç°
 template <class T>
 class Heap {
 private:
@@ -18,15 +18,15 @@ public:
     ~Heap() {
         free(heapNode);
     }
-    //Êä³ö¶ÑÄÚÈİ
+    //è¾“å‡ºå †å†…å®¹
     void print() ;
-    //ÅĞ¶Ï¶ÑÊÇ·ñÎª¿Õ
+    //åˆ¤æ–­å †æ˜¯å¦ä¸ºç©º
     bool empty();
-    //Êä³ö¶Ñ¶¥µÄÔªËØ
+    //è¾“å‡ºå †é¡¶çš„å…ƒç´ 
     T top() ;
-    //°ÑÒ»¸ö½Úµã·ÅÈë¶ÑÖĞ
+    //æŠŠä¸€ä¸ªèŠ‚ç‚¹æ”¾å…¥å †ä¸­
     void push(T node);
-    //É¾³ı¶Ñ¶¥ÔªËØ
+    //åˆ é™¤å †é¡¶å…ƒç´ 
     void pop() ;
 };
 
