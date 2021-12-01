@@ -1,3 +1,3 @@
 "C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\HuffmanCoding.dir/objects.a
 D:\TDM-GCC-64\bin\ar.exe qc CMakeFiles\HuffmanCoding.dir/objects.a @CMakeFiles\HuffmanCoding.dir\objects1.rsp
-D:\TDM-GCC-64\bin\x86_64-w64-mingw32-g++.exe -g -Wl,--whole-archive CMakeFiles\HuffmanCoding.dir/objects.a -Wl,--no-whole-archive -o HuffmanCoding.exe -Wl,--out-implib,libHuffmanCoding.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\HuffmanCoding.dir\linklibs.rsp
+D:\TDM-GCC-64\bin\x86_64-w64-mingw32-g++.exe -O3 -DNDEBUG -Wl,--whole-archive CMakeFiles\HuffmanCoding.dir/objects.a -Wl,--no-whole-archive -o HuffmanCoding.exe -Wl,--out-implib,libHuffmanCoding.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\HuffmanCoding.dir\linklibs.rsp
