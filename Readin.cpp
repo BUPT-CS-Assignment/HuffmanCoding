@@ -1,6 +1,6 @@
 #include"HuffmanCoding.h"
 
-//¶ÁÈ¡Ô´ÎÄ¼ş.
+//è¯»å–æºæ–‡ä»¶.
 bool Document::ReadinSource() {
     fseek(reader, 0, 0);
     if (reader == NULL) return false;
@@ -8,44 +8,62 @@ bool Document::ReadinSource() {
     while (!feof(reader)) {
         if (fread( & buffer, 1, 1, reader) <= 0 && !feof(reader))
             return false;
+        if(feof(reader)) return true;
         BytecodeArray[buffer]++;
     }
     return true;
 }
 
-//¶ÁÈ¡ÒÑ½âÂëÎÄ¼ş
-//´ÓÎÄ¼şÖĞ¶ÁÈëÍ·²¿·Ö,½øĞĞ½âÂë²¢»¹Ô­Ê÷
+//è¯»å–å·²è§£ç æ–‡ä»¶
+//ä»æ–‡ä»¶ä¸­è¯»å…¥å¤´éƒ¨åˆ†,è¿›è¡Œè§£ç å¹¶è¿˜åŸæ ‘
 bool Document::ReadinCode() {
-    int head_t = 0;
     int _top = TOP_NUM;
     memset(buff, 0, sizeof(buff));
-    if (fread( & FILEsize, 8, 1, reader) <= 0) return false; //¶ÁÈ¡ÎÄ¼ş´óĞ¡£¨×Ö½ÚÊı£©
-    if (fread( & head_t, 1, 1, reader) <= 0) return false; //¶ÁÈëÊ××Ö½Ú:Ê÷½á¹¹Êı×éµÄ´óĞ¡
-    if (fread( & buff, 1, head_t, reader) <= 0) return false; //¶ÁÈëÊ÷½á¹¹Êı×é.´ËºófpÎ»ÓÚÊ×¸ö×Ö½ÚÒ¶×Ó
-    RebuildTree(_top); //¹¹½¨Ê÷
+    char reading[9]="00000000";
+    char in;
+    for(int i=0;i<4;i++){
+        if(fread(&reading,8,1,reader) <= 0) return false;
+        FILEsize=FILEsize*pow(2,8)+toInt(reading);
+        fseek(reader,1,SEEK_CUR);
+    }
+    if (fread( & reading, 8, 1, reader) <= 0) return false; //è¯»å…¥é¦–å­—èŠ‚:æ ‘ç»“æ„æ•°ç»„çš„å¤§å°
+    int head_t=toInt(reading);
+    fseek(reader,1,SEEK_CUR);
+    for(int i=0;i<head_t;i++){
+        if(fread(&reading,8,1,reader) <= 0) return false;
+        fseek(reader,1,SEEK_CUR);
+        buff[i]=toInt(reading);
+    }
+    //è¯»å…¥æ ‘ç»“æ„æ•°ç»„.æ­¤åfpä½äºé¦–ä¸ªå­—èŠ‚å¶å­
+    RebuildTree(_top); //æ„å»ºæ ‘
     return true;
 }
 
-//DFS±éÀú,½¨Á¢¹ş·òÂüÊ÷.·µ»Øµ±Ç°½ÚµãÊÇ·ñÎª×Ö½ÚÒ¶×Ó
+//DFSéå†,å»ºç«‹å“ˆå¤«æ›¼æ ‘.è¿”å›å½“å‰èŠ‚ç‚¹æ˜¯å¦ä¸ºå­—èŠ‚å¶å­
 bool Document::RebuildTree(int & now) {
-    unsigned char t = 0;
+    //int t = 0;
     int _now = now;
-    bool Cflag = (buff[buff_t] & (1 << buff_p++)); //ÅĞ¶ÏÊÇ·ñÓĞº¢×Ó
-    if (buff_p == 8)
-        buff_t++, buff_p = 0;
+    bool Cflag = (buff[buff_t] & (1 << buff_p--)); //åˆ¤æ–­æ˜¯å¦æœ‰å­©å­
+    if (buff_p == -1)
+        buff_t++, buff_p = 7;
     if (!Cflag) {
         now--;
         return true;
-    } //µ±Ç°ÊÇ×Ö½ÚÒ¶×Ó½Úµã.
+    } //å½“å‰æ˜¯å­—èŠ‚å¶å­èŠ‚ç‚¹.
     HuffmanTree[_now][_left] = ++now;
-    if (RebuildTree(now)) { //Èç¹ûÊÇ×Ö½ÚÒ¶×Ó½Úµã,ÔòË³Ğò¶ÁÈëÒ»¸ö×Ö½ÚÒ¶×ÓÊı¾İ
-        if (fread( & t, 1, 1, reader) <= 0) return false;
-        HuffmanTree[_now][_left] = t;
+    
+    if (RebuildTree(now)) { //å¦‚æœæ˜¯å­—èŠ‚å¶å­èŠ‚ç‚¹,åˆ™é¡ºåºè¯»å…¥ä¸€ä¸ªå­—èŠ‚å¶å­æ•°æ®
+        char node[9]="00000000";
+        if (fread( & node, 8, 1, reader) <= 0) return false;
+        fseek(reader,1,SEEK_CUR);
+        HuffmanTree[_now][_left] = toInt(node);
     }
     HuffmanTree[_now][_right] = ++now;
     if (RebuildTree(now)) {
-        if (fread( & t, 1, 1, reader) <= 0) return false;
-        HuffmanTree[_now][_right] = t;
+        char node[9]="00000000";
+        if (fread( & node, 8, 1, reader) <= 0) return false;
+        fseek(reader,1,SEEK_CUR);
+        HuffmanTree[_now][_right] = toInt(node);
     }
     return false;
 }

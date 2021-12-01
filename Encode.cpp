@@ -1,13 +1,23 @@
 #include"HuffmanCoding.h"
 
-//±àÂë¹ı³Ì
+//ç¼–ç è¿‡ç¨‹
 bool Document::Encode() {
     fseek(reader, 0, 0);
     fseek(writer, 0, 0);
     if (!reader || !writer)
         return false;
-    fwrite( & FILEsize, 8, 1, writer);
-    enCodingTree(top);  //Ğ´ÈëÊ÷½á¹¹±àÂë
+    char FileSizeBit[33];
+    memset(FileSizeBit,'0',sizeof(FileSizeBit));
+    FileSizeBit[32]='\0';
+    toBinary(FileSizeBit,FILEsize);
+    for(int i=0;i<32;i++){
+        fprintf(writer,"%c",FileSizeBit[i]);
+        if((i+1)%8==0)
+            fprintf(writer," ");
+    }
+    //fprintf(writer,"%s ",FileSizeBit);
+    //fwrite( & FILEsize, 8, 1, writer);
+    enCodingTree(top);  //å†™å…¥æ ‘ç»“æ„ç¼–ç 
     ///
     int buffer = 0;
     char bitStr[9] = "00000000";
@@ -17,50 +27,67 @@ bool Document::Encode() {
             const char * str = Words[buffer].c_str();
             for (int i = 0; i < strlen(str); i++) {
                 bitStr[indic++] = str[i];
-                if (indic == 8) { //°´8bitÎªÒ»µ¥Î»Êä³ö
-                    int byte = toInt(bitStr);
-                    fwrite( & byte, 1, 1, writer);
+                if (indic == 8) { //æŒ‰8bitä¸ºä¸€å•ä½è¾“å‡º
+                    //int byte = toInt(bitStr);
+                    fwrite( & bitStr, 8, 1, writer);
                     strcpy(bitStr, "00000000");
                     indic = 0;
+                    fprintf(writer," ");
                 }
             }
         }
     }
-    if (indic != 0) {  //×îºóÒ»¸ö×Ö½Ú²»Âú8Î»ÔòÒÔ0²¹×ã
-        int byte = toInt(bitStr);
-        if (fwrite( & byte, 1, 1, writer) <= 0) return false;
+    if (indic != 0) {  //æœ€åä¸€ä¸ªå­—èŠ‚ä¸æ»¡8ä½åˆ™ä»¥0è¡¥è¶³
+        //int byte = toInt(bitStr);
+        if (fwrite( & bitStr, 8, 1, writer) <= 0) return false;
     }
     cout << "Finish. Check '" << FILEname << "'." << endl;
     return true;
 }
 
-//¶Ô¹ş·òÂüÊ÷½øĞĞ±àÂë
+//å¯¹å“ˆå¤«æ›¼æ ‘è¿›è¡Œç¼–ç 
 bool Document::enCodingTree(int top) {
     searchTree(top);
     //
-    fwrite( & (++buff_t), 1, 1, writer); //Ğ´ÈëÊ××Ö½Ú:Ê÷½á¹¹Êı×éµÄ´óĞ¡
-    fwrite(buff, buff_t, 1, writer); //Ğ´ÈëbuffÊı×é:´æ´¢Ê÷½á¹¹µÄ
-    fwrite(bitSeq, bitSeq_p, 1, writer); //Ğ´ÈëbitseqÊı×é:°´ÕÕDFSĞò,ÒÀ´Î´æ´¢È¨Öµ´Ó´óµ½Ğ¡µÄ×Ö½ÚÒ¶×Ó
+    char _buff_t[9]="00000000";
+    toBinary(_buff_t,(++buff_t));
+    fprintf(writer,"%s ",_buff_t);
+    //fwrite( & (++buff_t), 1, 1, writer); //å†™å…¥é¦–å­—èŠ‚:æ ‘ç»“æ„æ•°ç»„çš„å¤§å°
+    //fprintf(writer,"%s",buff);
+    for(int i=0;i<buff_t;i++){
+        char s[9]="00000000";
+        toBinary(s,(int)buff[i]);
+        fprintf(writer,"%s ",s);
+    }
+    //fwrite(buff, buff_t, 1, writer); //å†™å…¥buffæ•°ç»„:å­˜å‚¨æ ‘ç»“æ„çš„
+    for(int i=0;i<bitSeq_p;i++){
+        char numBit[9]="00000000";
+        toBinary(numBit,(int)bitSeq[i]);
+        fwrite( & numBit, 8, 1, writer);
+        fprintf(writer," ");
+    }
+    //fwrite(bitSeq, bitSeq_p, 1, writer); //å†™å…¥bitseqæ•°ç»„:æŒ‰ç…§DFSåº,ä¾æ¬¡å­˜å‚¨æƒå€¼ä»å¤§åˆ°å°çš„å­—èŠ‚å¶å­
     return true;
 };
 
-//µİ¹éµÄDFS¹ş·òÂüÊ÷,½øĞĞ±àÂë
+//é€’å½’çš„DFSå“ˆå¤«æ›¼æ ‘,è¿›è¡Œç¼–ç 
 void Document::searchTree(int now) {
-    bool Cflag = (HuffmanTree[now][_left] == -1); //ÅĞ¶ÏÊÇ·ñÓĞº¢×Ó
-    buff[buff_t] |= ((!Cflag) << buff_p++);
+    bool Cflag = (HuffmanTree[now][_left] == -1); //åˆ¤æ–­æ˜¯å¦æœ‰å­©å­
+    buff[buff_t] |= ((!Cflag) << buff_p--);
+    //buff[buff_t]+='0';
     /*
-        1.Ğ¡¶Ë·¨£¬´ÓÓÒÏò×óÒÀ´Î¼ÇÂ¼
-        2.Èç¹ûµ±Ç°½ÚµãnowÓĞº¢×Ó£¬ÔòCflagÎª0 È¡·´ºó½«µ±Ç°Î»ÖÃÎ»1
+        1.å°ç«¯æ³•ï¼Œä»å³å‘å·¦ä¾æ¬¡è®°å½•
+        2.å¦‚æœå½“å‰èŠ‚ç‚¹nowæœ‰å­©å­ï¼Œåˆ™Cflagä¸º0 å–ååå°†å½“å‰ä½ç½®ä½1
         
-        e.g:Èôbuff_pÎª 4 , CflagÎª0 Ê×ÏÈ1 << 4 µÃµ½b(0001 0000)
-            Èôµ±Ç°buff[buff_t] Îª 0000 0011 ,½øĞĞ|²Ù×÷ºóÎª 0001 0011.
-            Íê³É¼ÇÂ¼²Ù×÷;
+        e.g:è‹¥buff_pä¸º 4 , Cflagä¸º0 é¦–å…ˆ1 << 4 å¾—åˆ°b(0001 0000)
+            è‹¥å½“å‰buff[buff_t] ä¸º 0000 0011 ,è¿›è¡Œ|æ“ä½œåä¸º 0001 0011.
+            å®Œæˆè®°å½•æ“ä½œ;
     */
-    if (buff_p == 8) buff_t++, buff_p = 0; //µ±Ğ´ÂúÒ»¸ö×Ö½Úºó,buff_t+1,´æ´¢µ½ÏÂÒ»¸öbuff
+    if (buff_p == -1) buff_t++, buff_p = 7; //å½“å†™æ»¡ä¸€ä¸ªå­—èŠ‚å,buff_t+1,å­˜å‚¨åˆ°ä¸‹ä¸€ä¸ªbuff
     if (Cflag) {
         bitSeq[bitSeq_p++] = now;
         return;
-    } //Èç¹ûÊÇ×Ö½ÚÒ¶×Ó,Ôò´æ´¢µ±Ç°½ÚµãµÄ×Ö½Ú²¢·µ»Ø
+    } //å¦‚æœæ˜¯å­—èŠ‚å¶å­,åˆ™å­˜å‚¨å½“å‰èŠ‚ç‚¹çš„å­—èŠ‚å¹¶è¿”å›
 
     searchTree(HuffmanTree[now][_left]);
     searchTree(HuffmanTree[now][_right]);

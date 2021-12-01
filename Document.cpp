@@ -6,16 +6,17 @@ Document::Document(string filePath, string fileName) {
     FILEpath = filePath.c_str();
     FILEname = fileName.c_str();
     reader = writer = NULL;
-    reader = fopen(FILEpath, "rb");
+    reader = fopen(FILEpath, "r");
     writer = fopen(FILEname, "wb");
     //
     top = TOP_NUM;
-    FILEsize = buff_p = buff_t = bitSeq_p = 0;
+    FILEsize = buff_t = bitSeq_p = 0;
+    buff_p =7;
     memset(buff, 0, sizeof(buff));
     memset(bitSeq, 0, sizeof(bitSeq));
     //
     for (int i = 0; i < 512; i++) {
-        //¹ş·òÂüÊı×é³õÊ¼»¯
+        //å“ˆå¤«æ›¼æ•°ç»„åˆå§‹åŒ–
         HuffmanTree[i][_weigth] = 0;
         HuffmanTree[i][_left] = HuffmanTree[i][_right] = -1;
         HuffmanTree[i][_parent] = 256;
@@ -30,20 +31,20 @@ Document::~Document() {
 }
 
 bool Document::Init(int mode) {
-    ///³õÊ¼»¯
-    //±à½âÂëÄ£Ê½ÅĞ¶¨
+    ///åˆå§‹åŒ–
+    //ç¼–è§£ç æ¨¡å¼åˆ¤å®š
     if (!(mode == 0 || mode == 1)) return false;
     int _flag=1;
     if (mode == 0) {
-        //±àÂë×¼±¸
+        //ç¼–ç å‡†å¤‡
         if (ReadinSource() && HTreeInit() && HTreeCreate() && WordsCreate())
             _flag=0;
     } else if (mode == 1) {
-        //½âÂë×¼±¸
+        //è§£ç å‡†å¤‡
         if(ReadinCode())
             _flag=0;
     }
-    ///·µ»Ø½á¹û
+    ///è¿”å›ç»“æœ
     if(_flag==0){
         cout<<"Initial success. Going to encode."<<endl;
         return true;
@@ -55,12 +56,12 @@ bool Document::Init(int mode) {
 }
 
 bool Document::HTreeInit() {
-    ///¹ş·òÂüÊ÷³õÊ¼»¯
+    ///å“ˆå¤«æ›¼æ ‘åˆå§‹åŒ–
     HuffmanTree[256][_parent] = -1;
     int flag = 1;
     for (int i = 0; i < 256; i++) {
         if (BytecodeArray[i] != 0) {
-            //ËùÓĞ³õÊ¼½ÚµãÈë¶Ñ
+            //æ‰€æœ‰åˆå§‹èŠ‚ç‚¹å…¥å †
             Nodes.push(Node(i, BytecodeArray[i], 256));
             HuffmanTree[i][_weigth] = BytecodeArray[i];
         }
@@ -69,7 +70,7 @@ bool Document::HTreeInit() {
 }
 
 bool Document::Select(int & node1, int & node2) {
-    ///Ñ¡ÔñÈ¨Öµ×îĞ¡µÄÁ½¸ö½Úµã
+    ///é€‰æ‹©æƒå€¼æœ€å°çš„ä¸¤ä¸ªèŠ‚ç‚¹
     node1 = node2 = 0;
     if (!Nodes.empty()) {
         node1 = Nodes.top().val;
@@ -83,37 +84,37 @@ bool Document::Select(int & node1, int & node2) {
 }
 
 bool Document::HTreeCreate() {
-    ///¹ş·òÂüÊ÷¹¹½¨
+    ///å“ˆå¤«æ›¼æ ‘æ„å»º
     int flag = TOP_NUM;
     if (Nodes.empty()) return false;
     while (!Nodes.empty()) {
         int node1, node2;
-        //Ñ¡ÔñÈ¨Öµ×îĞ¡µÄÁ½¸ö½Úµã
+        //é€‰æ‹©æƒå€¼æœ€å°çš„ä¸¤ä¸ªèŠ‚ç‚¹
         Select(node1, node2);
-        //Éú³ÉĞÂ½Úµã
+        //ç”Ÿæˆæ–°èŠ‚ç‚¹
         long long new_weight = HuffmanTree[node1][_weigth] + HuffmanTree[node2][_weigth];
         HuffmanTree[flag][_weigth] = new_weight;
         HuffmanTree[node1][_parent] = HuffmanTree[node2][_parent] = flag;
         HuffmanTree[flag][_left] = node1;
         HuffmanTree[flag][_right] = node2;
         if (!Nodes.empty()) {
-            //ĞÂ½ÚµãÈë¶Ñ
+            //æ–°èŠ‚ç‚¹å…¥å †
             Nodes.push(Node(flag, new_weight, 256));
             top = flag;
             flag++;
         }
     }
-    //¼ÇÂ¼ÎÄ¼ş´óĞ¡£¨/×Ö½Ú£©
+    //è®°å½•æ–‡ä»¶å¤§å°ï¼ˆ/å­—èŠ‚ï¼‰
     FILEsize = HuffmanTree[++top][_weigth];
     return true;
 }
 
 bool Document::WordsCreate() {
-    ///¼ÇÂ¼×Ö·ûµÄ¹ş·òÂü±àÂë
+    ///è®°å½•å­—ç¬¦çš„å“ˆå¤«æ›¼ç¼–ç 
     for (int i = 0; i < 256; i++) {
         if (BytecodeArray[i] > 0) {
             int cur = i;
-            //´ÓÒ¶×Ó½ÚµãÏòÉÏËÑË÷
+            //ä»å¶å­èŠ‚ç‚¹å‘ä¸Šæœç´¢
             int pre = HuffmanTree[cur][_parent];
             string code = "";
             while (pre != 256) {
@@ -128,7 +129,7 @@ bool Document::WordsCreate() {
 }
 
 void Document::checkTree() {
-    ///¹ş·òÂüÊ÷±éÀú£¬´øÒ¶×Ó½Úµã¶ÔÓ¦×Ö·û±àÂë
+    ///å“ˆå¤«æ›¼æ ‘éå†ï¼Œå¸¦å¶å­èŠ‚ç‚¹å¯¹åº”å­—ç¬¦ç¼–ç 
     for (int i = 0; i < 512; i++) {
         cout << i << " " <<
             HuffmanTree[i][_weigth] << " " <<
@@ -143,7 +144,7 @@ void Document::checkTree() {
 }
 
 int Document::toInt(char * bit) {
-    //¶ş½øÖÆ×ªÊ®½øÖÆ
+    //äºŒè¿›åˆ¶è½¬åè¿›åˆ¶
     int out = 0;
     int len = strlen(bit);
     for (int i = 0; i < len; i++) {
@@ -153,7 +154,7 @@ int Document::toInt(char * bit) {
 }
 
 void Document::toBinary(char * binary, int num) {
-    //Ê®½øÖÆ×ª¶ş½øÖÆ
+    //åè¿›åˆ¶è½¬äºŒè¿›åˆ¶
     int dir = 0;
     int len = strlen(binary);
     while (num != 0) {

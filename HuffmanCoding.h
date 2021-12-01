@@ -8,13 +8,13 @@
 #include<math.h>
 using namespace std;
 
-#define _weigth 0   //È¨Öµ
-#define _left 1     //×ó×ÓÊ÷
-#define _right 2    //ÓÒ×ÓÊ÷
-#define _parent 3   //Ë«Ç×
-#define TOP_NUM 257 //Ê÷¸ù±àºÅ
+#define _weigth 0   //æƒå€¼
+#define _left 1     //å·¦å­æ ‘
+#define _right 2    //å³å­æ ‘
+#define _parent 3   //åŒäº²
+#define TOP_NUM 257 //æ ‘æ ¹ç¼–å·
 
-//ÎªĞ¡¸ù¶Ñ¶¨Òå½Úµã½á¹¹
+//ä¸ºå°æ ¹å †å®šä¹‰èŠ‚ç‚¹ç»“æ„
 struct Node{
     int val ,parent;
     long long weight;
@@ -28,22 +28,22 @@ struct Node{
     }
 };
 
-//¶¨ÒåDocumentÀà£¬°üº¬±à½âÂë·½·¨
+//å®šä¹‰Documentç±»ï¼ŒåŒ…å«ç¼–è§£ç æ–¹æ³•
 class Document{
 private:
-    int BytecodeArray[256];  //È¨Öµ¼ÇÂ¼Êı×é
-    long long HuffmanTree[512][4];  //¹ş·òÂüÊ÷
-    string Words[258];  //×Ö½Ú±àÂëÊı×é
+    int BytecodeArray[256];  //æƒå€¼è®°å½•æ•°ç»„
+    long long HuffmanTree[512][4];  //å“ˆå¤«æ›¼æ ‘
+    string Words[258];  //å­—èŠ‚ç¼–ç æ•°ç»„
     //
     unsigned char buff[64], bitSeq[256];
     int bitSeq_p, buff_p , buff_t;
     //
-    const char* FILEpath,* FILEname;  //¶ÁĞ´ÎÄ¼şÃû
-    FILE* reader,* writer;  //¶ÁĞ´ÎÄ¼şÖ¸Õë
-    long long FILEsize;  //ÎÄ¼ş´óĞ¡£¨×Ö½ÚÊı£©
-    Heap<Node> Nodes;  //Ğ¡¸ù¶Ñ
-    int top;   //Ê÷¸ù±àºÅ
-    //±àÂëº¯Êı
+    const char* FILEpath,* FILEname;  //è¯»å†™æ–‡ä»¶å
+    FILE* reader,* writer;  //è¯»å†™æ–‡ä»¶æŒ‡é’ˆ
+    long long FILEsize;  //æ–‡ä»¶å¤§å°ï¼ˆå­—èŠ‚æ•°ï¼‰
+    Heap<Node> Nodes;  //å°æ ¹å †
+    int top;   //æ ‘æ ¹ç¼–å·
+    //ç¼–ç å‡½æ•°
     bool ReadinSource();
     bool HTreeInit();
     bool Select(int & node1,int & node2);
@@ -51,7 +51,7 @@ private:
     bool WordsCreate();
     void searchTree(int now);
     bool enCodingTree(const int top);
-    //½âÂëº¯Êı
+    //è§£ç å‡½æ•°
     bool ReadinCode();
     bool RebuildTree(int &now);
     //
