@@ -6,12 +6,12 @@ Document::Document(string filePath, string fileName) {
     FILEpath = filePath.c_str();
     FILEname = fileName.c_str();
     reader = writer = NULL;
-    reader = fopen(FILEpath, "r");
+    reader = fopen(FILEpath, "rb");
     writer = fopen(FILEname, "wb");
     //
     top = TOP_NUM;
     FILEsize = buff_t = bitSeq_p = 0;
-    buff_p =7;
+    buff_p=7;
     memset(buff, 0, sizeof(buff));
     memset(bitSeq, 0, sizeof(bitSeq));
     //
@@ -97,15 +97,13 @@ bool Document::HTreeCreate() {
         HuffmanTree[node1][_parent] = HuffmanTree[node2][_parent] = flag;
         HuffmanTree[flag][_left] = node1;
         HuffmanTree[flag][_right] = node2;
-        if (!Nodes.empty()) {
-            //新节点入堆
-            Nodes.push(Node(flag, new_weight, 256));
-            top = flag;
-            flag++;
-        }
+        if (!Nodes.empty()) 
+            Nodes.push(Node(flag, new_weight, 256)); //新节点入堆
+        top = flag;
+        flag++;
     }
     //记录文件大小（/字节）
-    FILEsize = HuffmanTree[++top][_weigth];
+    FILEsize = HuffmanTree[top][_weigth];
     return true;
 }
 
